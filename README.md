@@ -71,16 +71,10 @@ scripts/apply-openwebui-settings.sh
 
 More detail is in [docs/openwebui-config.md](docs/openwebui-config.md).
 
-## Publishing The GitHub Repo
+## Repository
 
-This local workspace can be published after creating the GitHub repository. The GitHub connector available in this Codex session can inspect repos and write files, but it does not expose repository creation, and `gh` is not installed locally.
+This repository is public:
 
-One terminal path is:
+https://github.com/IAmPreden/macos-openwebui-stack
 
-```sh
-brew install gh
-gh auth login
-gh repo create IAmPreden/macos-openwebui-stack --private --source . --remote origin --push
-```
-
-Use `--public` instead of `--private` if this is intended to be public.
+Fork it, clone it, or transfer it to a corporate GitHub organization as needed. Runtime secrets are generated locally by `scripts/bootstrap.sh` and are not committed.
