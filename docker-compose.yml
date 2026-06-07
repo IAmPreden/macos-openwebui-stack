@@ -1,0 +1,154 @@
+name: ${COMPOSE_PROJECT_NAME:-openwebui}
+
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:${OPENWEBUI_IMAGE_TAG:-main}
+    ports:
+      - "${OPENWEBUI_PORT:-3000}:8080"
+    volumes:
+      - open-webui:/app/backend/data
+    environment:
+      WEBUI_SECRET_KEY: ${WEBUI_SECRET_KEY}
+      WEBUI_URL: ${WEBUI_URL:-http://localhost:3000}
+      AIOHTTP_CLIENT_TIMEOUT: ${AIOHTTP_CLIENT_TIMEOUT:-600}
+      ENABLE_RETRIEVAL_UNSCOPED_COLLECTIONS: ${ENABLE_RETRIEVAL_UNSCOPED_COLLECTIONS:-true}
+      BYPASS_RETRIEVAL_ACCESS_CONTROL: ${BYPASS_RETRIEVAL_ACCESS_CONTROL:-true}
+      FIRECRAWL_API_BASE_URL: ${FIRECRAWL_API_BASE_URL:-http://firecrawl-api:3002}
+      FIRECRAWL_API_KEY: ${FIRECRAWL_API_KEY}
+      LM_STUDIO_BASE_URL: ${LM_STUDIO_BASE_URL:-http://host.docker.internal:1234/v1}
+      LM_STUDIO_API_KEY: ${LM_STUDIO_API_KEY}
+      LM_STUDIO_EMBEDDING_MODEL: ${LM_STUDIO_EMBEDDING_MODEL:-text-embedding-bge-m3}
+      LM_STUDIO_RERANKER_MODEL: ${LM_STUDIO_RERANKER_MODEL:-text-embedding-bge-reranker-v2-m3}
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    networks:
+      - openwebui_net
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+    restart: unless-stopped
+    depends_on:
+      - searxng
+      - firecrawl-api
+
+  searxng:
+    image: searxng/searxng:latest
+    ports:
+      - "${SEARXNG_PORT:-8888}:8080"
+    volumes:
+      - ./searxng:/etc/searxng:rw
+    networks:
+      - openwebui_net
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+    restart: unless-stopped
+
+  watchtower:
+    image: nickfedor/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --label-enable --schedule "${WATCHTOWER_SCHEDULE:-0 0 3 * * 0}" --cleanup
+    networks:
+      - openwebui_net
+    restart: unless-stopped
+
+  firecrawl-api:
+    image: ghcr.io/firecrawl/firecrawl:${FIRECRAWL_IMAGE_TAG:-latest}
+    command:
+      - node
+      - dist/src/harness.js
+      - --start-docker
+    ports:
+      - "127.0.0.1:${FIRECRAWL_PORT:-3002}:3002"
+    environment:
+      ENV: local
+      HOST: 0.0.0.0
+      PORT: 3002
+      USE_DB_AUTHENTICATION: "false"
+      REDIS_URL: redis://firecrawl-redis:6379
+      REDIS_RATE_LIMIT_URL: redis://firecrawl-redis:6379
+      NUQ_RABBITMQ_URL: amqp://firecrawl-rabbitmq:5672
+      POSTGRES_HOST: firecrawl-postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PLAYWRIGHT_MICROSERVICE_URL: http://firecrawl-playwright:3000/scrape
+      BROWSER_POOL_SIZE: 3
+      MAX_CONCURRENT_JOBS: 3
+      CRAWL_CONCURRENT_REQUESTS: 5
+      NUM_WORKERS_PER_QUEUE: 4
+      BULL_AUTH_KEY: ${BULL_AUTH_KEY}
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    networks:
+      - openwebui_net
+    restart: unless-stopped
+    depends_on:
+      firecrawl-playwright:
+        condition: service_started
+      firecrawl-rabbitmq:
+        condition: service_healthy
+      firecrawl-redis:
+        condition: service_started
+      firecrawl-postgres:
+        condition: service_started
+
+  firecrawl-playwright:
+    image: ghcr.io/firecrawl/playwright-service:${FIRECRAWL_PLAYWRIGHT_IMAGE_TAG:-latest}
+    environment:
+      PORT: 3000
+      MAX_CONCURRENT_PAGES: 5
+      BLOCK_MEDIA: "true"
+    networks:
+      - openwebui_net
+    restart: unless-stopped
+    tmpfs:
+      - /tmp/.cache:noexec,nosuid,size=1g
+
+  firecrawl-redis:
+    image: redis:alpine
+    command:
+      - redis-server
+      - --bind
+      - 0.0.0.0
+    networks:
+      - openwebui_net
+    restart: unless-stopped
+
+  firecrawl-rabbitmq:
+    image: rabbitmq:3-management
+    command:
+      - rabbitmq-server
+    healthcheck:
+      test:
+        - CMD
+        - rabbitmq-diagnostics
+        - -q
+        - check_running
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - openwebui_net
+    restart: unless-stopped
+
+  firecrawl-postgres:
+    image: ghcr.io/firecrawl/nuq-postgres:${FIRECRAWL_POSTGRES_IMAGE_TAG:-latest}
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - firecrawl-postgres:/var/lib/postgresql/data
+    networks:
+      - openwebui_net
+    restart: unless-stopped
+
+volumes:
+  open-webui:
+  firecrawl-postgres:
+
+networks:
+  openwebui_net:
+    driver: bridge
