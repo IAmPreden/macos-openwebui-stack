@@ -126,9 +126,11 @@ ensure_secret() {
   fi
 }
 
-need_command docker
-docker compose version >/dev/null
-docker info >/dev/null
+if [[ "$START_STACK" -eq 1 ]]; then
+  need_command docker
+  docker compose version >/dev/null
+  docker info >/dev/null
+fi
 
 if [[ ! -f .env ]]; then
   cp .env.example .env
@@ -146,9 +148,10 @@ ensure_value WEBUI_URL http://localhost:3000
 ensure_value AIOHTTP_CLIENT_TIMEOUT 600
 ensure_value ENABLE_RETRIEVAL_UNSCOPED_COLLECTIONS true
 ensure_value BYPASS_RETRIEVAL_ACCESS_CONTROL true
-ensure_value LM_STUDIO_BASE_URL http://host.docker.internal:1234/v1
-ensure_value LM_STUDIO_EMBEDDING_MODEL text-embedding-bge-m3
-ensure_value LM_STUDIO_RERANKER_MODEL text-embedding-bge-reranker-v2-m3
+ensure_value OMLX_BASE_URL http://host.docker.internal:8000/v1
+ensure_value OMLX_API_KEY not-needed
+ensure_value OMLX_EMBEDDING_MODEL text-embedding-bge-m3
+ensure_value OMLX_RERANKER_MODEL text-embedding-bge-reranker-v2-m3
 ensure_value FIRECRAWL_API_BASE_URL http://firecrawl-api:3002
 ensure_value POSTGRES_DB postgres
 ensure_value POSTGRES_USER postgres
@@ -159,7 +162,6 @@ ensure_secret SEARXNG_SECRET_KEY "" 32
 ensure_secret BULL_AUTH_KEY "" 32
 ensure_secret POSTGRES_PASSWORD "" 24
 ensure_secret FIRECRAWL_API_KEY "fc-local-" 24
-ensure_secret LM_STUDIO_API_KEY "sk-local-" 24
 
 chmod 600 .env
 

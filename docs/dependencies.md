@@ -4,10 +4,10 @@ This stack is intended for macOS first, especially an OrbStack-backed Docker set
 
 ## Required
 
-- macOS on Apple Silicon or Intel.
+- macOS 15+ on Apple Silicon for the default oMLX inference setup.
 - OrbStack, recommended, or Docker Desktop.
 - Docker Compose v2, available as `docker compose`.
-- LM Studio if using the default local inference setup.
+- oMLX if using the default local inference setup.
 - Git, for cloning and publishing the repo.
 - `openssl` or `python3`, used by `scripts/bootstrap.sh` to generate fresh local secrets.
 

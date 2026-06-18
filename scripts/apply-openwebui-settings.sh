@@ -46,10 +46,10 @@ DB_PATH = "/app/backend/data/webui.db"
 SETTINGS_PATH = "/tmp/openwebui-settings.json"
 
 replacements = {
-    "__LM_STUDIO_BASE_URL__": os.environ.get("LM_STUDIO_BASE_URL", "http://host.docker.internal:1234/v1"),
-    "__LM_STUDIO_API_KEY__": os.environ.get("LM_STUDIO_API_KEY", "sk-local-placeholder"),
-    "__LM_STUDIO_EMBEDDING_MODEL__": os.environ.get("LM_STUDIO_EMBEDDING_MODEL", "text-embedding-bge-m3"),
-    "__LM_STUDIO_RERANKER_MODEL__": os.environ.get("LM_STUDIO_RERANKER_MODEL", "text-embedding-bge-reranker-v2-m3"),
+    "__OMLX_BASE_URL__": os.environ.get("OMLX_BASE_URL", "http://host.docker.internal:8000/v1"),
+    "__OMLX_API_KEY__": os.environ.get("OMLX_API_KEY", "not-needed"),
+    "__OMLX_EMBEDDING_MODEL__": os.environ.get("OMLX_EMBEDDING_MODEL", "text-embedding-bge-m3"),
+    "__OMLX_RERANKER_MODEL__": os.environ.get("OMLX_RERANKER_MODEL", "text-embedding-bge-reranker-v2-m3"),
     "__FIRECRAWL_API_URL__": os.environ.get("FIRECRAWL_API_BASE_URL", "http://firecrawl-api:3002"),
     "__FIRECRAWL_API_KEY__": os.environ.get("FIRECRAWL_API_KEY", "fc-local-placeholder"),
 }

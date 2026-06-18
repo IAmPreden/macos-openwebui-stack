@@ -14,22 +14,22 @@
     "LLM provider/model connection table rows"
   ],
   "placeholders": {
-    "__LM_STUDIO_BASE_URL__": "Taken from .env LM_STUDIO_BASE_URL; default http://host.docker.internal:1234/v1",
-    "__LM_STUDIO_API_KEY__": "Generated local dummy key from .env LM_STUDIO_API_KEY. LM Studio accepts any value for local OpenAI-compatible requests.",
-    "__LM_STUDIO_EMBEDDING_MODEL__": "Taken from .env LM_STUDIO_EMBEDDING_MODEL.",
-    "__LM_STUDIO_RERANKER_MODEL__": "Taken from .env LM_STUDIO_RERANKER_MODEL.",
+    "__OMLX_BASE_URL__": "Taken from .env OMLX_BASE_URL; default http://host.docker.internal:8000/v1",
+    "__OMLX_API_KEY__": "Taken from .env OMLX_API_KEY; default not-needed for a local oMLX server.",
+    "__OMLX_EMBEDDING_MODEL__": "Taken from .env OMLX_EMBEDDING_MODEL.",
+    "__OMLX_RERANKER_MODEL__": "Taken from .env OMLX_RERANKER_MODEL.",
     "__FIRECRAWL_API_URL__": "Taken from .env FIRECRAWL_API_BASE_URL; default http://firecrawl-api:3002.",
     "__FIRECRAWL_API_KEY__": "Generated local placeholder from .env FIRECRAWL_API_KEY; self-hosted Firecrawl runs with DB auth disabled."
   },
   "merge": {
     "rag": {
       "embedding_engine": "openai",
-      "embedding_model": "__LM_STUDIO_EMBEDDING_MODEL__",
+      "embedding_model": "__OMLX_EMBEDDING_MODEL__",
       "embedding_batch_size": 8,
       "enable_async_embedding": true,
       "embedding_concurrent_requests": 0,
-      "openai_api_base_url": "__LM_STUDIO_BASE_URL__",
-      "openai_api_key": "__LM_STUDIO_API_KEY__",
+      "openai_api_base_url": "__OMLX_BASE_URL__",
+      "openai_api_key": "__OMLX_API_KEY__",
       "ollama": {
         "url": "http://host.docker.internal:11434",
         "key": ""
@@ -84,11 +84,11 @@
         "pdf"
       ],
       "reranking_engine": "external",
-      "external_reranker_url": "__LM_STUDIO_BASE_URL__",
-      "external_reranker_api_key": "__LM_STUDIO_API_KEY__",
+      "external_reranker_url": "__OMLX_BASE_URL__",
+      "external_reranker_api_key": "__OMLX_API_KEY__",
       "external_reranker_timeout": "",
       "reranking_batch_size": 32,
-      "reranking_model": "__LM_STUDIO_RERANKER_MODEL__",
+      "reranking_model": "__OMLX_RERANKER_MODEL__",
       "text_splitter": "",
       "enable_markdown_header_text_splitter": true,
       "chunk_size": 1000,

@@ -1,8 +1,8 @@
-# macOS Open WebUI Stack
+# macOS Open WebUI
 
 Portable Docker Compose stack for recreating the source `~/docker/openwebui` deployment on another machine without copying users, chats, credentials, API tokens, TLS assets, or database secrets.
 
-The default target is macOS with OrbStack and LM Studio. The Compose file should also work with Docker Desktop or a Linux Docker host, provided `host.docker.internal` resolves back to the host inference runtime.
+The default target is macOS with OrbStack and oMLX. The Compose file should also work with Docker Desktop or a Linux Docker host, provided `host.docker.internal` resolves back to the host inference runtime.
 
 ## What This Carries
 
@@ -19,8 +19,8 @@ The default target is macOS with OrbStack and LM Studio. The Compose file should
 ## Quick Start
 
 ```sh
-git clone https://github.com/IAmPreden/macos-openwebui-stack.git
-cd macos-openwebui-stack
+git clone https://github.com/NickUrquhart/macos-openwebui.git
+cd macos-openwebui
 scripts/bootstrap.sh
 ```
 
@@ -32,7 +32,7 @@ If you are running this on the original source Mac, stop the existing stack firs
 
 - OrbStack or Docker Desktop.
 - Docker Compose v2.
-- LM Studio with the local OpenAI-compatible server enabled if using the default inference setup.
+- oMLX with the local OpenAI-compatible server enabled if using the default inference setup.
 - The models listed in [docs/inference.md](docs/inference.md), or your own replacement models.
 
 See [docs/dependencies.md](docs/dependencies.md) for the full dependency list.
@@ -42,7 +42,7 @@ See [docs/dependencies.md](docs/dependencies.md) for the full dependency list.
 - Open WebUI: `http://localhost:3000`
 - SearXNG: `http://localhost:8888`
 - Firecrawl API: `http://localhost:3002`
-- LM Studio API from inside containers: `http://host.docker.internal:1234/v1`
+- oMLX API from inside containers: `http://host.docker.internal:8000/v1`
 
 ## Generated Secrets
 
@@ -55,9 +55,8 @@ Generated values include:
 - `BULL_AUTH_KEY`
 - `POSTGRES_PASSWORD`
 - `FIRECRAWL_API_KEY`
-- `LM_STUDIO_API_KEY`
 
-The `LM_STUDIO_API_KEY` and `FIRECRAWL_API_KEY` values are local placeholders for services that are running without cloud authentication. They are generated anyway so Open WebUI fields are populated without reusing source-machine values.
+The default `OMLX_API_KEY` value is `not-needed` because the local oMLX server does not require a cloud API key. `FIRECRAWL_API_KEY` is generated as a local placeholder so Open WebUI fields are populated without reusing source-machine values.
 
 ## Settings Import
 
@@ -75,6 +74,6 @@ More detail is in [docs/openwebui-config.md](docs/openwebui-config.md).
 
 This repository is public:
 
-https://github.com/IAmPreden/macos-openwebui-stack
+https://github.com/NickUrquhart/macos-openwebui
 
 Fork it, clone it, or transfer it to a corporate GitHub organization as needed. Runtime secrets are generated locally by `scripts/bootstrap.sh` and are not committed.

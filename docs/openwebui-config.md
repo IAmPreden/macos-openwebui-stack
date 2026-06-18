@@ -13,8 +13,8 @@ The portable export in `config/openwebui-settings.json` comes from the single ro
 ## Included
 
 - Document RAG settings.
-- Embedding settings for the local OpenAI-compatible LM Studio endpoint.
-- Reranker settings for the local OpenAI-compatible LM Studio endpoint.
+- Embedding settings for the local OpenAI-compatible oMLX endpoint.
+- Reranker settings for the local OpenAI-compatible oMLX endpoint.
 - Web search settings using SearXNG.
 - Web loader settings using self-hosted Firecrawl.
 - Query task switches related to web search and retrieval.
@@ -26,7 +26,7 @@ The portable export in `config/openwebui-settings.json` comes from the single ro
 - API keys and secret values.
 - Chats, messages, reactions, folders, tags, and shared chats.
 - Files, documents, knowledge collections, and vector DB data.
-- Open WebUI model table rows and LM Studio-specific chat model configuration.
+- Open WebUI model table rows and oMLX-specific chat model configuration.
 - OAuth sessions, API keys, automation history, calendars, notes, feedback, and other user-owned data.
 
 The bootstrap importer deep-merges the payload into a fresh Open WebUI config row after the container has created its database. Placeholders are replaced from `.env`, so each deployment gets new local keys.

@@ -15,10 +15,10 @@ services:
       BYPASS_RETRIEVAL_ACCESS_CONTROL: ${BYPASS_RETRIEVAL_ACCESS_CONTROL:-true}
       FIRECRAWL_API_BASE_URL: ${FIRECRAWL_API_BASE_URL:-http://firecrawl-api:3002}
       FIRECRAWL_API_KEY: ${FIRECRAWL_API_KEY}
-      LM_STUDIO_BASE_URL: ${LM_STUDIO_BASE_URL:-http://host.docker.internal:1234/v1}
-      LM_STUDIO_API_KEY: ${LM_STUDIO_API_KEY}
-      LM_STUDIO_EMBEDDING_MODEL: ${LM_STUDIO_EMBEDDING_MODEL:-text-embedding-bge-m3}
-      LM_STUDIO_RERANKER_MODEL: ${LM_STUDIO_RERANKER_MODEL:-text-embedding-bge-reranker-v2-m3}
+      OMLX_BASE_URL: ${OMLX_BASE_URL:-http://host.docker.internal:8000/v1}
+      OMLX_API_KEY: ${OMLX_API_KEY:-not-needed}
+      OMLX_EMBEDDING_MODEL: ${OMLX_EMBEDDING_MODEL:-text-embedding-bge-m3}
+      OMLX_RERANKER_MODEL: ${OMLX_RERANKER_MODEL:-text-embedding-bge-reranker-v2-m3}
     extra_hosts:
       - host.docker.internal:host-gateway
     networks:
